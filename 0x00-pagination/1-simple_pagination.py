@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 """
 This module has two methods named get_page and get_index that we wrote above.
 get page takes two integer arguments page with default value of 1 and
