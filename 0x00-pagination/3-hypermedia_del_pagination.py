@@ -7,9 +7,10 @@ import csv
 import math
 from typing import List, Dict, Optional
 
+
 class Server:
     """Server class to paginate a database of popular baby names."""
-    
+
     DATA_FILE = "Popular_Baby_Names.csv"
 
     def __init__(self):
@@ -37,8 +38,9 @@ class Server:
 
     def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
         """
-        Return a dictionary with pagination information that is resilient to deletions.
-        
+        Return a dictionary with pagination information that is resilient
+        to deletions.
+
         Args:
             index (int): The starting index for the page.
             page_size (int): The number of items per page.
@@ -49,7 +51,7 @@ class Server:
                 - 'next_index': Index to query for the next page.
                 - 'page_size': The current page size.
                 - 'data': The actual data for the current page.
-                
+
         Raises:
             AssertionError: If index is out of range.
         """
