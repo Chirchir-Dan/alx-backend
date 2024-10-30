@@ -16,7 +16,8 @@ class LRUCache(BaseCaching):
     def put(self, key, item):
         """ Adds an item to the cache using LRU policy """
         if key is not None and item is not None:
-            # If the key is already in cache, remove it from usage_order to update its position
+            # If the key is already in cache, remove it from usage_order
+            # to update its position
             if key in self.cache_data:
                 self.usage_order.remove(key)
 
@@ -24,7 +25,8 @@ class LRUCache(BaseCaching):
             self.cache_data[key] = item
             self.usage_order.append(key)
 
-            # If cache exceeds the maximum size, remove the least recently used item
+            # If cache exceeds the maximum size,
+            # remove the least recently used item
             if len(self.cache_data) > BaseCaching.MAX_ITEMS:
                 # The least recently used item is the first item in usage_order
                 lru_key = self.usage_order.pop(0)
