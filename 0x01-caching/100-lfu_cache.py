@@ -4,14 +4,18 @@
 from base_caching import BaseCaching
 from collections import defaultdict, OrderedDict
 
+
 class LFUCache(BaseCaching):
     """ LFUCache class with LFU + LRU eviction policy """
 
     def __init__(self):
         """ Initialize the cache """
         super().__init__()
-        self.usage_freq = defaultdict(int)  # Frequency of each key
-        self.access_order = OrderedDict()   # Keeps track of access order by key
+        # Frequency of each key
+        self.usage_freq = defaultdict(int)
+
+        # Keeps track of access order by key
+        self.access_order = OrderedDict()
 
     def put(self, key, item):
         """ Add an item to the cache with LFU + LRU eviction policy """
@@ -40,7 +44,9 @@ class LFUCache(BaseCaching):
         return self.cache_data[key]
 
     def _increment_frequency(self, key):
-        """ Increment the frequency and update access order for LRU fallback """
+        """
+        Increment the frequency and update access order for LRU fallback
+        """
         self.usage_freq[key] += 1
         self.access_order.move_to_end(key)  # Update order for LRU
 
@@ -49,8 +55,10 @@ class LFUCache(BaseCaching):
         # Find the minimum frequency
         min_freq = min(self.usage_freq.values())
         # Collect all keys with that minimum frequency
-        lfu_candidates = [k for k, freq in self.usage_freq.items() if freq == min_freq]
-        
+        lfu_candidates = [
+                k for k, freq in self.usage_freq.items() if freq == min_freq
+                ]
+
         # Apply LRU by using the access order of keys with minimum frequency
         lfu_key = next(k for k in self.access_order if k in lfu_candidates)
 
@@ -58,6 +66,6 @@ class LFUCache(BaseCaching):
         del self.cache_data[lfu_key]
         del self.usage_freq[lfu_key]
         self.access_order.pop(lfu_key)
-        
+
         # Print the key that was discarded
         print(f"DISCARD: {lfu_key}")
