@@ -15,29 +15,30 @@ class MRUCache(BaseCaching):
 
     def put(self, key, item):
         """ Adds an item to the cache using MRU policy """
-        if key is not None and item is not None:
-            """ If the key already exists,
-            remove it from usage_order to update its position """
-            if key in self.cache_data:
-                self.usage_order.remove(key)
+        if key is None or item is None:
+            return
 
-            # Add the item to the cache and mark it as most recently used
-            self.cache_data[key] = item
-            self.usage_order.append(key)
+        # Update existing key to the most recent position
+        if key in self.cache_data:
+            self.usage_order.remove(key)
+        # Add new item to cache
+        self.cache_data[key] = item
+        self.usage_order.append(key)
 
-            """ If the cache exceeds the max size,
-            discard the most recently used item """
-            if len(self.cache_data) > BaseCaching.MAX_ITEMS:
-                # The most recently used item is the last item in usage_order
-                mru_key = self.usage_order.pop()
-                del self.cache_data[mru_key]
-                print(f"DISCARD: {mru_key}")
+        # Check if cache size exceeds max limit
+        if len(self.cache_data) > BaseCaching.MAX_ITEMS:
+            # Discard the most recently used (last in `usage_order`)
+            "Second-last as new item is last"
+            mru_key = self.usage_order.pop(-2)
+            del self.cache_data[mru_key]
+            print(f"DISCARD: {mru_key}")
 
     def get(self, key):
         """ Gets the value associated with a key in the cache """
-        if key is not None and key in self.cache_data:
-            # Update usage order as this key is now the most recently used
-            self.usage_order.remove(key)
-            self.usage_order.append(key)
-            return self.cache_data[key]
-        return None
+        if key is None or key not in self.cache_data:
+            return None
+
+        # Update usage order: remove the key and add it to the end
+        self.usage_order.remove(key)
+        self.usage_order.append(key)
+        return self.cache_data[key]
